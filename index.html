@@ -5,52 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bake Sale POS</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        table { margin: 20px auto; border-collapse: collapse; }
-        th, td { border: 1px solid black; padding: 10px; }
-        input { width: 50px; }
+        body { font-family: Arial, sans-serif; text-align: center; width:850px}
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+        .container{
+            margin: 20px auto;
+            background-color:#fff;
+            display:grid;
+            grid-template-columns: 400px 400px;
+            grid-column-gap: 20px;
+            grid-row-gap: 20px;
+           
+        }
+        .buttoncontainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .buttoncontainer img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .qty {
+            margin-top: 10px; /* Space between image and input */
+            padding: 8px;
+            width: 50px; /* Adjust width as needed */
+            max-width: 300px;
+        }
+
     </style>
 </head>
 <body>
     
-    <table>
+    <div class="container">
         
-        <tr>
-            <td>Cookies</td>
-            <td>$1.50</td>
-            <td><input class="qty" type="number" id="cookies" value="0"></td>
-        </tr>
-        <tr>
-            <td>Brownies</td>
-            <td>$2.00</td>
-            <td><input class="qty" type="number" id="brownies" value="0"></td>
-        </tr>
-        <tr>
-            <td>Cupcakes</td>
-            <td>$2.50</td>
-            <td><input class="qty" type="number" id="cupcakes" value="0"></td>
-        </tr>
-        <tr>
-            <td>Muffins</td>
-            <td>$2.00</td>
-            <td><input class="qty" type="number" id="muffins" value="0"></td>
-        </tr>
-        <tr>
-            <td>Donuts</td>
-            <td>$1.75</td>
-            <td><input class="qty" type="number" id="donuts" value="0"></td>
-        </tr>
-    </table>
-    <button onclick="calculateTotal()">Calculate Total</button>
-    <button onclick="submitData()">Submit Sale</button>
-    <button onclick="resetFields()">Reset</button>
-    <h3>Total: $<span id="total">0.00</span></h3>
+        <div class="buttoncontainer">
+            <img width="250px" src=".\img\hotdog.jpg"/>
+            <input class="qty" type="number" id="hotdog" value="0">
+        </div>
+        <div class="buttoncontainer">
+            <img width="250px"src=".\img\chips.jpg"/>
+            
+            <input class="qty" type="number" id="chips" value="0">
+        </div>
+        <div class="buttoncontainer">
+            <img width="250px" src=".\img\candy.jpg"/>
+           
+            <input class="qty" type="number" id="candy" value="0">
+        </div>
+        <div class="buttoncontainer">
+            <img width="250px" src=".\img\combo.jpg"/>
+            
+            <input class="qty" type="number" id="combo" value="0">
+        </div>
+        <div class="buttoncontainer">
+            <img width="250px"src=".\img\soda.jpg"/>
+            <input class="qty" type="number" id="soda" value="0">
+        </div>
+        <div class="buttoncontainer">
+            <img width="250px"src=".\img\water.jpg"/>
+            <input class="qty" type="number" id="water" value="0">
+        </div>
+    </div>
+    <div>
+        <button onclick="calculateTotal()">Calculate Total</button>
+        <button onclick="submitData()">Submit Sale</button>
+        <button onclick="resetFields()">Reset</button>
+        <h3>Total: $<span id="total">0.00</span></h3>
+    </div>
     
     <script>
-        const SHEET_URL = "https://script.google.com/macros/s/AKfycbzsV7Hs5hkRoqZi_n-nUKYR4Tt6lS5f729XALYNzXD2auQeMTglgMQlM6pFq-M6YnE2/exec";
+        const SHEET_URL = "https://script.google.com/macros/s/AKfycbznWqGa13SWk36Tk9gQMu2pGp7Ig5P3vJyj6rZsYd4bQ2PPvW5K8IiIPDoRNBLm4aTErw/exec";
         
 
-        document.querySelectorAll('table tr').forEach(row  => 
+        document.querySelectorAll('.container div').forEach(row  => 
             row.addEventListener('click', (e) =>  {
             qty = e.currentTarget.getElementsByClassName('qty')[0];
             value = parseInt(qty.value);
@@ -61,7 +96,7 @@
 
         
         function calculateTotal() {
-            let prices = { cookies: 1.5, brownies: 2.0, cupcakes: 2.5, muffins: 2.0, donuts: 1.75 };
+            let prices = { hotdog: 4,chips: 1.5, candy: 2.0, combo: 2.5, soda: 2.0, water: 1.75 };
             let total = 0;
             
             for (let item in prices) {
@@ -74,11 +109,12 @@
         
         function submitData() {
             let data = {
-                cookies: document.getElementById("cookies").value,
-                brownies: document.getElementById("brownies").value,
-                cupcakes: document.getElementById("cupcakes").value,
-                muffins: document.getElementById("muffins").value,
-                donuts: document.getElementById("donuts").value,
+                hotdog: document.getElementById("hotdog").value,
+                chips: document.getElementById("chips").value,
+                candy: document.getElementById("candy").value,
+                combo: document.getElementById("combo").value,
+                soda: document.getElementById("soda").value,
+                water: document.getElementById("water").value,
                 total: document.getElementById("total").innerText
             };
             
