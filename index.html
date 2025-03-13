@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bake Sale POS</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        table { margin: 20px auto; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 10px; }
+        input { width: 50px; }
+    </style>
+</head>
+<body>
+    
+    <table>
+        
+        <tr>
+            <td>Cookies</td>
+            <td>$1.50</td>
+            <td><input class="qty" type="number" id="cookies" value="0"></td>
+        </tr>
+        <tr>
+            <td>Brownies</td>
+            <td>$2.00</td>
+            <td><input class="qty" type="number" id="brownies" value="0"></td>
+        </tr>
+        <tr>
+            <td>Cupcakes</td>
+            <td>$2.50</td>
+            <td><input class="qty" type="number" id="cupcakes" value="0"></td>
+        </tr>
+        <tr>
+            <td>Muffins</td>
+            <td>$2.00</td>
+            <td><input class="qty" type="number" id="muffins" value="0"></td>
+        </tr>
+        <tr>
+            <td>Donuts</td>
+            <td>$1.75</td>
+            <td><input class="qty" type="number" id="donuts" value="0"></td>
+        </tr>
+    </table>
+    <button onclick="calculateTotal()">Calculate Total</button>
+    <button onclick="submitData()">Submit Sale</button>
+    <button onclick="resetFields()">Reset</button>
+    <h3>Total: $<span id="total">0.00</span></h3>
+    
+    <script>
+        const SHEET_URL = "https://script.google.com/macros/s/AKfycbzsV7Hs5hkRoqZi_n-nUKYR4Tt6lS5f729XALYNzXD2auQeMTglgMQlM6pFq-M6YnE2/exec";
+        
+
+        document.querySelectorAll('table tr').forEach(row  => 
+            row.addEventListener('click', (e) =>  {
+            qty = e.currentTarget.getElementsByClassName('qty')[0];
+            value = parseInt(qty.value);
+            value += 1;
+            qty.value = value;
+            calculateTotal();
+        }));
+
+        
+        function calculateTotal() {
+            let prices = { cookies: 1.5, brownies: 2.0, cupcakes: 2.5, muffins: 2.0, donuts: 1.75 };
+            let total = 0;
+            
+            for (let item in prices) {
+                let quantity = document.getElementById(item).value;
+                total += (quantity * prices[item]);
+            }
+            
+            document.getElementById("total").innerText = total.toFixed(2);
+        }
+        
+        function submitData() {
+            let data = {
+                cookies: document.getElementById("cookies").value,
+                brownies: document.getElementById("brownies").value,
+                cupcakes: document.getElementById("cupcakes").value,
+                muffins: document.getElementById("muffins").value,
+                donuts: document.getElementById("donuts").value,
+                total: document.getElementById("total").innerText
+            };
+            
+            fetch(SHEET_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                mode:  'no-cors',
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())
+            .then(data => alert("Sale Submitted Successfully!"))
+            .catch(error => console.error("Error:", error));
+        }
+        
+        function resetFields() {
+            document.querySelectorAll("input").forEach(input => input.value = 0);
+            document.getElementById("total").innerText = "0.00";
+        }
+    </script>
+</body>
+</html>
