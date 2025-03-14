@@ -1,127 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; width:850px}
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-        }
-        .container{
-            margin: 20px auto;
-            background-color:#fff;
-            display:grid;
-            grid-template-columns: 300px 300px;
-            grid-column-gap: 20px;
-            grid-row-gap: 20px;
-           
-        }
-        .buttoncontainer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .buttoncontainer img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .qty {
-            margin-top: 10px; /* Space between image and input */
-            padding: 8px;
-            width: 50px; /* Adjust width as needed */
-        }
-        button{margin:15px; padding:25px; font-size:large; font-weight: bold;}
-
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="buttoncontainer">
-            <img width="200px" src=".\img\hotdog.jpg"/>
-            <input class="qty" type="number" id="hotdog" value="0">
-        </div>
-        <div class="buttoncontainer">
-            <img width="200px"src=".\img\chips.jpg"/>
-            <input class="qty" type="number" id="chips" value="0">
-        </div>
-        <div class="buttoncontainer">
-            <img width="200px" src=".\img\uncrustable.jpg"/>
-            <input class="qty" type="number" id="uncrustable" value="0">
-        </div>
-        <div class="buttoncontainer">
-            <img width="200px" src=".\img\combo.jpg"/>
-            <input class="qty" type="number" id="combo" value="0">
-        </div>
-        <div class="buttoncontainer">
-            <img width="200px"src=".\img\soda.jpg"/>
-            <input class="qty" type="number" id="soda" value="0">
-        </div>
-        <div class="buttoncontainer">
-            <img width="200px"src=".\img\powerade.jpg"/>
-            <input class="qty" type="number" id="powerade" value="0">
-        </div>
-        <div class="buttoncontainer">
-            <img width="200px"src=".\img\water.jpg"/>
-            <input class="qty" type="number" id="water" value="0">
-        </div>
-        <div>
-            <div><button onclick="submitData()">Submit Sale</button></div>
-            <div><button onclick="resetFields()">Reset</button></div>
-            <h1>Total: $<span id="total">0.00</span></h3>
-        </div>
-    </div>
-   
-    <script>
-        const SHEET_URL = "https://script.google.com/macros/s/AKfycbzK0GtVj2diqIKbdL4P_mVO0Ew1IlWSmT7HQhwTzE0FyZVOjYaJUIBch4mcifcNvG-2Jg/exec";
-        document.querySelectorAll('.container div').forEach(row  => 
-            row.addEventListener('click', (e) =>  {
-            qty = e.currentTarget.getElementsByClassName('qty')[0];
-            value = parseInt(qty.value);
-            value += 1;
-            qty.value = value;
-            calculateTotal();
-        }));
-        function calculateTotal() {
-            let prices = { hotdog: 3,chips: 1.5, uncrustable: 2.5, combo: 6, soda: 2.0, powerade: 2.0, water: 1 };
-            let total = 0;
-            for (let item in prices) {
-                let quantity = document.getElementById(item).value;
-                total += (quantity * prices[item]);
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body { 
+                font-family: Arial, sans-serif;
+                text-align: center;
+                width: 100%;
+                max-width: 850px;
+                margin: 0 auto;
+                padding: 10px;
+                background-color: #f9f9f9;
             }
-            document.getElementById("total").innerText = total.toFixed(2);
-        }
-        function submitData() {
-            let data = {
-                hotdog: document.getElementById("hotdog").value,
-                chips: document.getElementById("chips").value,
-                uncrustable: document.getElementById("uncrustable").value,
-                combo: document.getElementById("combo").value,
-                soda: document.getElementById("soda").value,
-                powerade: document.getElementById("powerade").value,
-                water: document.getElementById("water").value,
-                total: document.getElementById("total").innerText
-            };
-            fetch(SHEET_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                mode:  'no-cors',
-                body: JSON.stringify(data)
-            })
-            .then(response => response.text())
-            .then(data => {resetFields()})
-            .catch(error => console.error("Error:", error));
-        }
-        function resetFields() {
-            document.querySelectorAll("input").forEach(input => input.value = 0);
-            document.getElementById("total").innerText = "0.00";
-        }
-    </script>
-</body>
-</html>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            .container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                grid-gap: 15px;
+                padding: 15px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            .buttoncontainer {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 10px;
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .buttoncontainer img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 5px;
+            }
+            .qty {
+                margin-top: 10px;
+                padding: 8px;
+                width: 80px;
+                font-size: 16px;
+                text-align: center;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            button {
+                margin: 10px;
+                padding: 12px 24px;
+                font-size: medium;
+                font-weight: bold;
+                cursor: pointer;
+                border: none;
+                border-radius: 5px;
+                background-color: #007bff;
+                color: white;
+                transition: background 0.3s;
+            }
+            button:hover {
+                background-color: #0056b3;
+            }
+            .action-buttons {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 20px;
+            }
+            .total-container {
+                margin-top: 15px;
+                font-size: 1.5em;
+                font-weight: bold;
+            }
+           
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="buttoncontainer">
+                <img src="./img/hotdog.jpg" alt="Hotdog"/>
+                <input class="qty" type="number" id="hotdog" value="0">
+            </div>
+            <div class="buttoncontainer">
+                <img src="./img/chips.jpg" alt="Chips"/>
+                <input class="qty" type="number" id="chips" value="0">
+            </div>
+            <div class="buttoncontainer">
+                <img src="./img/uncrustable.jpg" alt="Uncrustable"/>
+                <input class="qty" type="number" id="uncrustable" value="0">
+            </div>
+            <div class="buttoncontainer">
+                <img src="./img/combo.jpg" alt="Combo"/>
+                <input class="qty" type="number" id="combo" value="0">
+            </div>
+            <div class="buttoncontainer">
+                <img src="./img/soda.jpg" alt="Soda"/>
+                <input class="qty" type="number" id="soda" value="0">
+            </div>
+            <div class="buttoncontainer">
+                <img src="./img/powerade.jpg" alt="Powerade"/>
+                <input class="qty" type="number" id="powerade" value="0">
+            </div>
+            <div class="buttoncontainer">
+                <img src="./img/water.jpg" alt="Water"/>
+                <input class="qty" type="number" id="water" value="0">
+            </div>
+        </div>
+        <div class="action-buttons">
+            <button onclick="submitData()">Submit Sale</button>
+            <button onclick="resetFields()">Reset</button>
+            <div class="total-container">Total: $<span id="total">0.00</span></div>
+        </div>
+    
+    
+        <script>
+            const SHEET_URL = "https://script.google.com/macros/s/AKfycbzK0GtVj2diqIKbdL4P_mVO0Ew1IlWSmT7HQhwTzE0FyZVOjYaJUIBch4mcifcNvG-2Jg/exec";
+            document.querySelectorAll('.container div').forEach(row  => 
+                row.addEventListener('click', (e) =>  {
+                qty = e.currentTarget.getElementsByClassName('qty')[0];
+                value = parseInt(qty.value);
+                value += 1;
+                qty.value = value;
+                calculateTotal();
+            }));
+            function calculateTotal() {
+                let prices = { hotdog: 3,chips: 1.5, uncrustable: 2.5, combo: 6, soda: 2.0, powerade: 2.0, water: 1 };
+                let total = 0;
+                for (let item in prices) {
+                    let quantity = document.getElementById(item).value;
+                    total += (quantity * prices[item]);
+                }
+                document.getElementById("total").innerText = total.toFixed(2);
+            }
+            function submitData() {
+                let data = {
+                    hotdog: document.getElementById("hotdog").value,
+                    chips: document.getElementById("chips").value,
+                    uncrustable: document.getElementById("uncrustable").value,
+                    combo: document.getElementById("combo").value,
+                    soda: document.getElementById("soda").value,
+                    powerade: document.getElementById("powerade").value,
+                    water: document.getElementById("water").value,
+                    total: document.getElementById("total").innerText
+                };
+                fetch(SHEET_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    mode:  'no-cors',
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.text())
+                .then(data => {resetFields()})
+                .catch(error => console.error("Error:", error));
+            }
+            function resetFields() {
+                document.querySelectorAll("input").forEach(input => input.value = 0);
+                document.getElementById("total").innerText = "0.00";
+            }
+        </script>
+    </body>
+    </html>
